@@ -2,6 +2,7 @@ package br.com.questionarium.question_service.dto;
 
 import java.util.Set;
 
+import br.com.questionarium.question_service.types.QuestionAccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class QuestionDTO {
     private Long headerId;
     private Long answerId;
     private boolean enable;
+    private QuestionAccessLevel accessLevel;
 
     private Set<Long> tagIds;
 }

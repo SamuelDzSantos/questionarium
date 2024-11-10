@@ -4,8 +4,11 @@ import java.util.Set;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import br.com.questionarium.question_service.types.QuestionAccessLevel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -53,6 +56,10 @@ public class Question {
 
     @Column(nullable = false)
     private boolean enable;
+
+    @Column(name = "access_type")
+    @Enumerated(EnumType.ORDINAL)
+    private QuestionAccessLevel accessLevel;
 
     @ManyToMany
     @JoinTable(

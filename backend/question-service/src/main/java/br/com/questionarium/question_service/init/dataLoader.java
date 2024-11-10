@@ -12,6 +12,7 @@ import br.com.questionarium.question_service.dto.TagDTO;
 import br.com.questionarium.question_service.service.EducationLevelService;
 import br.com.questionarium.question_service.service.QuestionService;
 import br.com.questionarium.question_service.service.TagService;
+import br.com.questionarium.question_service.types.QuestionAccessLevel;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -43,6 +44,7 @@ public class dataLoader implements ApplicationRunner {
             .headerId(0L)
             .answerId(0L)
             .enable(true)
+            .accessLevel(QuestionAccessLevel.PRIVATE)
             .tagIds(Set.of(1L))
             .build());
     }

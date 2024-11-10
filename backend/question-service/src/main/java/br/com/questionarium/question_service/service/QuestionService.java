@@ -63,12 +63,13 @@ public class QuestionService {
                     question.setHeaderId(questionDTO.getHeaderId());
                     question.setAnswerId(questionDTO.getAnswerId());
                     question.setEnable(questionDTO.isEnable());
+                    question.setAccessLevel(questionDTO.getAccessLevel());
 
                     QuestionServiceHelper.setEducationLevel(questionDTO, question, educationLevelRepository);
                     QuestionServiceHelper.setTags(questionDTO, question, tagRepository);
 
                     Question updatedQuestion = questionRepository.save(question);
-
+                    
                     return questionMapper.toDTO(updatedQuestion);
                 })
                 .orElseThrow(() -> new RuntimeException("Question not found with ID " + id));
