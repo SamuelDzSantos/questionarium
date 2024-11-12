@@ -5,6 +5,7 @@ import java.util.Set;
 import org.hibernate.annotations.ColumnDefault;
 
 import br.com.questionarium.question_service.types.QuestionAccessLevel;
+import br.com.questionarium.question_service.types.QuestionEducationLevel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,9 +41,9 @@ public class Question {
     @Column(nullable = false)
     private Integer numberLines;
 
-    @ManyToOne
-    @JoinColumn(name = "education_level_id", referencedColumnName = "id", nullable = true )
-    private EducationLevel educationLevel;
+    @Column()
+    @Enumerated(EnumType.ORDINAL)
+    private QuestionEducationLevel educationLevel;
 
     @Column(name = "person_id", nullable = false)
     private Long personId;

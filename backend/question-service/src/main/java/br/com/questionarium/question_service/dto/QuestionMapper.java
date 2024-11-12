@@ -15,11 +15,11 @@ import br.com.questionarium.question_service.model.Tag;
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
 
-    @Mapping(source = "educationLevel.id", target = "educationLevelId")
+    // @Mapping(source = "educationLevel.id", target = "educationLevelId")
     @Mapping(source = "tags", target = "tagIds", qualifiedByName = "mapTagsToIds")
     QuestionDTO toDTO(Question question);
 
-    @Mapping(source = "educationLevelId", target = "educationLevel", qualifiedByName = "mapLongToEducationLevel")
+    // @Mapping(source = "educationLevelId", target = "educationLevel", qualifiedByName = "mapLongToEducationLevel")
     @Mapping(source = "tagIds", target = "tags", qualifiedByName = "mapIdsToTags")
     Question toEntity(QuestionDTO questionDTO);
 

@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.questionarium.question_service.dto.QuestionDTO;
 import br.com.questionarium.question_service.dto.QuestionMapper;
-import br.com.questionarium.question_service.model.EducationLevel;
 import br.com.questionarium.question_service.model.Question;
 import br.com.questionarium.question_service.model.Tag;
-import br.com.questionarium.question_service.repository.EducationLevelRepository;
 import br.com.questionarium.question_service.repository.QuestionRepository;
 import br.com.questionarium.question_service.repository.TagRepository;
 
@@ -21,17 +19,14 @@ import br.com.questionarium.question_service.repository.TagRepository;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final EducationLevelRepository educationLevelRepository;
     private final TagRepository tagRepository;
     private final QuestionMapper questionMapper;
 
     public QuestionService(QuestionRepository questionRepository,
-            EducationLevelRepository educationLevelRepository,
             TagRepository tagRepository,
             QuestionMapper questionMapper) {
 
         this.questionRepository = questionRepository;
-        this.educationLevelRepository = educationLevelRepository;
         this.tagRepository = tagRepository;
         this.questionMapper = questionMapper;
     }
@@ -64,8 +59,8 @@ public class QuestionService {
                     question.setAnswerId(questionDTO.getAnswerId());
                     question.setEnable(questionDTO.isEnable());
                     question.setAccessLevel(questionDTO.getAccessLevel());
-
-                    QuestionServiceHelper.setEducationLevel(questionDTO, question, educationLevelRepository);
+                    question.setEducationLevel(questionDTO.getEducationLevel());
+                    
                     QuestionServiceHelper.setTags(questionDTO, question, tagRepository);
 
                     Question updatedQuestion = questionRepository.save(question);
@@ -89,19 +84,6 @@ public class QuestionService {
 }
 
 class QuestionServiceHelper {
-    public static void setEducationLevel(
-            QuestionDTO questionDTO,
-            Question question,
-            EducationLevelRepository educationLevelRepository) {
-
-        Optional<EducationLevel> educationLevelOpt = educationLevelRepository
-                .findById(questionDTO.getEducationLevelId());
-        if (educationLevelOpt.isPresent()) {
-            question.setEducationLevel(educationLevelOpt.get());
-        } else {
-            throw new RuntimeException("EducationLevel not found with ID " + questionDTO.getEducationLevelId());
-        }
-    }
 
     public static void setTags(QuestionDTO questionDTO, Question question, TagRepository tagRepository) {
         if (questionDTO.getTagIds() != null && !questionDTO.getTagIds().isEmpty()) {
