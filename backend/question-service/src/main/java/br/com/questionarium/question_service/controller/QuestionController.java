@@ -2,6 +2,8 @@ package br.com.questionarium.question_service.controller;
 
 import br.com.questionarium.question_service.dto.QuestionDTO;
 import br.com.questionarium.question_service.service.QuestionService;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +44,12 @@ public class QuestionController {
         try {
             QuestionDTO updatedQuestion = questionService.updateQuestion(id, questionDTO);
             return new ResponseEntity<>(updatedQuestion, HttpStatus.OK);
-        } catch (RuntimeException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

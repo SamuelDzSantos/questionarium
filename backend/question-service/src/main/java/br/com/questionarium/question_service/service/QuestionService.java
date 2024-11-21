@@ -1,5 +1,6 @@
 package br.com.questionarium.question_service.service;
 
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -7,11 +8,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.questionarium.question_service.dto.AlternativeDTO;
 import br.com.questionarium.question_service.dto.QuestionDTO;
 import br.com.questionarium.question_service.dto.QuestionMapper;
+import br.com.questionarium.question_service.model.Alternative;
 import br.com.questionarium.question_service.model.Question;
 import br.com.questionarium.question_service.model.Tag;
+import br.com.questionarium.question_service.repository.AlternativeRepository;
 import br.com.questionarium.question_service.repository.QuestionRepository;
 import br.com.questionarium.question_service.repository.TagRepository;
 
@@ -20,20 +25,51 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final TagRepository tagRepository;
+    private final AlternativeRepository alternativeRepository;
     private final QuestionMapper questionMapper;
 
     public QuestionService(QuestionRepository questionRepository,
             TagRepository tagRepository,
+            AlternativeRepository alternativeRepository,
             QuestionMapper questionMapper) {
 
         this.questionRepository = questionRepository;
         this.tagRepository = tagRepository;
+        this.alternativeRepository = alternativeRepository;
         this.questionMapper = questionMapper;
     }
 
     public QuestionDTO createQuestion(QuestionDTO questionDTO) {
+
+        List<AlternativeDTO> correctAlternatives = questionDTO.getAlternatives().stream()
+        .filter(AlternativeDTO::getIsCorrect)
+        .toList();
+
+        if (correctAlternatives.isEmpty()) {
+            throw new IllegalArgumentException("No correct alternative provided.");
+        }
+
+        if (correctAlternatives.size() > 1) {
+            throw new IllegalArgumentException("More than one correct alternative provided.");
+        }
+        
         Question question = questionMapper.toEntity(questionDTO);
+    
+        QuestionServiceHelper.setTags(questionDTO, question, tagRepository);
+    
+        question.getAlternatives().forEach(alternative -> alternative.setQuestion(question));
+    
         Question savedQuestion = questionRepository.save(question);
+    
+        Alternative correctAlternative = savedQuestion.getAlternatives().stream()
+            .filter(Alternative::getIsCorrect)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("No correct alternative provided"));
+    
+        savedQuestion.setAnswerId(correctAlternative.getId());
+    
+        savedQuestion = questionRepository.save(savedQuestion);
+    
         return questionMapper.toDTO(savedQuestion);
     }
 
@@ -49,26 +85,68 @@ public class QuestionService {
                 .map(questionMapper::toDTO);
     }
 
-    public QuestionDTO updateQuestion(Long id, QuestionDTO questionDTO) {
-        return questionRepository.findById(id)
-                .map(question -> {
-                    question.setMultipleChoice(questionDTO.isMultipleChoice());
-                    question.setNumberLines(questionDTO.getNumberLines());
-                    question.setPersonId(questionDTO.getPersonId());
-                    question.setHeaderId(questionDTO.getHeaderId());
-                    question.setAnswerId(questionDTO.getAnswerId());
-                    question.setEnable(questionDTO.isEnable());
-                    question.setAccessLevel(questionDTO.getAccessLevel());
-                    question.setEducationLevel(questionDTO.getEducationLevel());
-                    
-                    QuestionServiceHelper.setTags(questionDTO, question, tagRepository);
-
-                    Question updatedQuestion = questionRepository.save(question);
-                    
-                    return questionMapper.toDTO(updatedQuestion);
-                })
+    @Transactional
+    public QuestionDTO updateQuestion(Long id, QuestionDTO questionDTO) throws RuntimeException {
+        
+        Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Question not found with ID " + id));
+    
+        question.setMultipleChoice(questionDTO.isMultipleChoice());
+        question.setNumberLines(questionDTO.getNumberLines());
+        question.setPersonId(questionDTO.getPersonId());
+        question.setHeaderId(questionDTO.getHeaderId());
+        question.setEnable(questionDTO.isEnable());
+        question.setAccessLevel(questionDTO.getAccessLevel());
+        question.setEducationLevel(questionDTO.getEducationLevel());
+
+        QuestionServiceHelper.setTags(questionDTO, question, tagRepository);
+
+        Set<Alternative> updatedAlternatives = new HashSet<>();
+        List<AlternativeDTO> correctAlternatives = questionDTO.getAlternatives().stream()
+                .filter(AlternativeDTO::getIsCorrect)
+                .collect(Collectors.toList());
+    
+        if (correctAlternatives.isEmpty()) {
+            throw new IllegalArgumentException("No correct alternative provided.");
+        }
+    
+        if (correctAlternatives.size() > 1) {
+            throw new IllegalArgumentException("More than one correct alternative provided.");
+        }
+    
+        for (AlternativeDTO alternativeDTO : questionDTO.getAlternatives()) {
+            if (alternativeDTO.getId() != null) {
+                Alternative existingAlternative = alternativeRepository.findById(alternativeDTO.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Alternative not found"));
+    
+                existingAlternative.setDescription(alternativeDTO.getDescription());
+                existingAlternative.setImagePath(alternativeDTO.getImagePath());
+                existingAlternative.setIsCorrect(alternativeDTO.getIsCorrect());
+                updatedAlternatives.add(alternativeRepository.save(existingAlternative));
+            } else {
+                Alternative newAlternative = Alternative.builder()
+                        .description(alternativeDTO.getDescription())
+                        .imagePath(alternativeDTO.getImagePath())
+                        .isCorrect(alternativeDTO.getIsCorrect())
+                        .question(question)
+                        .build();
+                updatedAlternatives.add(alternativeRepository.save(newAlternative));
+            }
+        }
+    
+        if (correctAlternatives.size() == 1) {
+            Alternative correctAlternative = updatedAlternatives.stream()
+                    .filter(Alternative::getIsCorrect)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No correct alternative provided."));
+            question.setAnswerId(correctAlternative.getId());
+        }
+
+        Question updatedQuestion = questionRepository.save(question);
+        System.out.println(updatedQuestion);
+        return questionMapper.toDTO(updatedQuestion);
     }
+    
 
     public void deleteQuestion(Long id) {
         questionRepository.findById(id)

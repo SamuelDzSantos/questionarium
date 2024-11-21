@@ -12,19 +12,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "education_level")
+@Table(name = "question_header")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EducationLevel {
+public class Header {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    
-    @Column(name= "name")
-    private String name;
 
-    @Column(name= "description")
-    private String description;
+    @Column(name= "content")
+    private String content;
+
+    @Column(name= "image_path")
+    private String imagePath;
+
 }
+

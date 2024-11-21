@@ -23,4 +23,5 @@ public class QuestionDTO {
     private QuestionAccessLevel accessLevel;
 
     private Set<Long> tagIds;
+    private Set<AlternativeDTO> alternatives;
 }
