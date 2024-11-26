@@ -53,6 +53,6 @@ export const routes: Routes = [
             { path: "recuperar-senha", component: RecuperarSenhaComponent },
             { path: "**", component: PageNotFoundComponent }
         ],
-        canActivateChild: [defaultCanActivateGuard]
+        //canActivateChild: [defaultCanActivateGuard]
     }
 ];
