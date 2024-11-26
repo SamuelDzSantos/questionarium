@@ -13,6 +13,7 @@ import { TurmaComponent } from './components/turma/turma.component';
 import { AvaliacaoCriarComponent } from './components/avaliacao/avaliacao-criar/avaliacao-criar.component';
 import { AddTurmaComponent } from './components/add-turma/add-turma.component';
 import { RecuperarSenhaComponent } from './components/recuperar-senha/recuperar-senha.component';
+import { CreateQuestionComponent, ViewQuestionsComponent } from './components/questions';
 
 export const routes: Routes = [
     {
@@ -36,6 +37,13 @@ export const routes: Routes = [
                 children: [
                     { path: "", component: AvaliacaoComponent },
                     { path: "criar", component: AvaliacaoCriarComponent }
+                ]
+            },
+            {
+                path: "questions",
+                children: [
+                    { path: "", component: ViewQuestionsComponent },
+                    { path: "criar", component: CreateQuestionComponent }
                 ]
             },
             { path: "sobre", component: SobreComponent },
