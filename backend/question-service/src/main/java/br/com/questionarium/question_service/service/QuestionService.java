@@ -1,6 +1,7 @@
 package br.com.questionarium.question_service.service;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.questionarium.question_service.dto.AlternativeDTO;
+import br.com.questionarium.question_service.dto.AnswerKeyDTO;
 import br.com.questionarium.question_service.dto.QuestionDTO;
 import br.com.questionarium.question_service.dto.QuestionMapper;
 import br.com.questionarium.question_service.model.Alternative;
@@ -83,6 +85,21 @@ public class QuestionService {
     public Optional<QuestionDTO> getQuestionById(Long id) {
         return questionRepository.findById(id)
                 .map(questionMapper::toDTO);
+    }
+
+    @Transactional
+    public List<AnswerKeyDTO> getAnswerKeys(List<Long> questionsIds){
+        
+        List<AnswerKeyDTO> pairs = new ArrayList<>();
+        for (Long id : questionsIds ) {
+            Optional<QuestionDTO> dto = questionRepository.findById(id).map(questionMapper::toDTO);
+            if(dto.isPresent()){
+                pairs.add(new AnswerKeyDTO(dto.get().getId(), dto.get().getAnswerId()));
+            }
+
+        }
+        System.out.println(pairs);
+        return pairs;
     }
 
     @Transactional

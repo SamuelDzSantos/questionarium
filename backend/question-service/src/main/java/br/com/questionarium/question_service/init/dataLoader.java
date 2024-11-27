@@ -56,6 +56,24 @@ public class dataLoader implements ApplicationRunner {
                 new AlternativeDTO(null, "D", "path",false,"",null),
                 new AlternativeDTO(null, "E", "path",false,"",null) ))
             .build());
+
+            questionService.createQuestion(QuestionDTO.builder()
+            .multipleChoice(true)
+            .numberLines(66)
+            .educationLevel(QuestionEducationLevel.ENSINO_MÉDIO)
+            .personId(11L)
+            .headerId(1L)
+            .answerId(0L)
+            .enable(true)
+            .accessLevel(QuestionAccessLevel.PRIVATE)
+            .tagIds(Set.of(1L))
+            .alternatives(Set.of(
+                new AlternativeDTO(null, "A", "path",true, "",null),
+                new AlternativeDTO(null, "B", "path",false,"",null),
+                new AlternativeDTO(null, "C", "path",false,"",null),
+                new AlternativeDTO(null, "D", "path",false,"",null),
+                new AlternativeDTO(null, "E", "path",false,"",null) ))
+            .build());
     }
 
 }
