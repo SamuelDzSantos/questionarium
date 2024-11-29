@@ -3,6 +3,8 @@ package br.com.questionarium.question_service.controller;
 import br.com.questionarium.question_service.dto.AnswerKeyDTO;
 import br.com.questionarium.question_service.dto.QuestionDTO;
 import br.com.questionarium.question_service.service.QuestionService;
+import br.com.questionarium.question_service.types.QuestionAccessLevel;
+import br.com.questionarium.question_service.types.QuestionEducationLevel;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -82,6 +85,23 @@ public class QuestionController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<QuestionDTO>> filterQuestions(
+            @RequestParam(required = false) boolean multipleChoice,
+            @RequestParam(required = false) Long personId,
+            @RequestParam(required = false) Integer difficultyLevel,
+            @RequestParam(required = false) QuestionEducationLevel educationLevel,
+            @RequestParam(required = false) QuestionAccessLevel accessLevel,
+            @RequestParam(required = false) Set<Long> tagIds) {
+
+        List<QuestionDTO> list = questionService.getFilteredQuestions(multipleChoice, personId, difficultyLevel, educationLevel, accessLevel, tagIds);
+
+        if(list.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     // @GetMapping("test")

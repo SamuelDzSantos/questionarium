@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,10 @@ import br.com.questionarium.question_service.model.Question;
 import br.com.questionarium.question_service.model.Tag;
 import br.com.questionarium.question_service.repository.AlternativeRepository;
 import br.com.questionarium.question_service.repository.QuestionRepository;
+import br.com.questionarium.question_service.repository.QuestionSpecification;
 import br.com.questionarium.question_service.repository.TagRepository;
+import br.com.questionarium.question_service.types.QuestionAccessLevel;
+import br.com.questionarium.question_service.types.QuestionEducationLevel;
 
 @Service
 public class QuestionService {
@@ -71,7 +75,7 @@ public class QuestionService {
             .orElseThrow(() -> new IllegalArgumentException("No correct alternative provided"));
     
         savedQuestion.setAnswerId(correctAlternative.getId());
-        System.out.println(savedQuestion);
+        
         savedQuestion = questionRepository.save(savedQuestion);
     
         return questionMapper.toDTO(savedQuestion);
@@ -192,6 +196,41 @@ public class QuestionService {
         }
         return questions;
         
+    }
+
+    public List<QuestionDTO> getFilteredQuestions(boolean multipleChoice,
+                                               Long personId,
+                                               Integer difficultyLevel,
+                                               QuestionEducationLevel educationLevel,
+                                               QuestionAccessLevel accessLevel,
+                                               Set<Long> tagIds) {
+        Specification<Question> spec = Specification.where(QuestionSpecification.filterByEnableTrue());
+
+        if (multipleChoice) {
+            spec = spec.and(QuestionSpecification.filterByMultipleChoice(true));
+        }
+
+        if (personId != null) {
+            spec = spec.and(QuestionSpecification.filterByPersonId(personId));
+        }
+
+        if (difficultyLevel != null) {
+            spec = spec.and(QuestionSpecification.filterByDifficultyLevel(difficultyLevel));
+        }
+
+        if (educationLevel != null) {
+            spec = spec.and(QuestionSpecification.filterByEducationLevel(educationLevel));
+        }
+
+        if (accessLevel != null) {
+            spec = spec.and(QuestionSpecification.filterByAccessLevel(accessLevel));
+        }
+
+        if (tagIds != null && !tagIds.isEmpty()) {
+            spec = spec.and(QuestionSpecification.filterByTagIds(tagIds));
+        }
+
+        return questionRepository.findAll(spec).stream().map(questionMapper::toDTO).toList();
     }
 
 }
