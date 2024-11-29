@@ -16,8 +16,9 @@ public class QuestionDTO {
     private boolean multipleChoice;
     private Integer numberLines;
     private Long personId;
-    private Long headerId;
+    private HeaderDTO header;
     private Long answerId;
+    private Integer difficultyLevel;
     private boolean enable;
     private QuestionEducationLevel educationLevel;
     private QuestionAccessLevel accessLevel;

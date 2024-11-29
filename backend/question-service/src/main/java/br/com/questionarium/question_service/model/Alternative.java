@@ -24,6 +24,9 @@ public class Alternative {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(name= "option")
+    private String option;
+
     @Column(name= "description")
     private String description;
 

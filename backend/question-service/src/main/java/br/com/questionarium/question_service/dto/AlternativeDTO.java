@@ -10,6 +10,7 @@ import lombok.Data;
 public class AlternativeDTO {
     
     private Long id;
+    private String option;
     private String description;
     private String imagePath;
     private Boolean isCorrect;

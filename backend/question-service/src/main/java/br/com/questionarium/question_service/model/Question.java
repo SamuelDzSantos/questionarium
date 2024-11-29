@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -51,14 +52,18 @@ public class Question {
     @Column(name = "person_id", nullable = false)
     private Long personId;
 
-    @Column(name = "header_id", nullable = false)
-    private Long headerId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "header_id")
+    private Header header;
 
     @Column(name = "answer_id", nullable = false)
     private Long answerId;
 
     @Column(nullable = false)
     private boolean enable;
+
+    @Column(name = "difficulty_level",nullable = true)
+    private Integer difficutyLevel;
 
     @Column(name = "access_type")
     @Enumerated(EnumType.ORDINAL)

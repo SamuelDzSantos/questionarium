@@ -44,17 +44,17 @@ public class dataLoader implements ApplicationRunner {
             .numberLines(15)
             .educationLevel(QuestionEducationLevel.ENSINO_FUNDAMENTAL)
             .personId(99L)
-            .headerId(1L)
+            .header(HeaderDTO.builder().content("Content").imagePath("$path").build())
             .answerId(0L)
             .enable(true)
             .accessLevel(QuestionAccessLevel.PRIVATE)
             .tagIds(Set.of(1L))
             .alternatives(Set.of(
-                new AlternativeDTO(null, "A", "path",true, "",null),
-                new AlternativeDTO(null, "B", "path",false,"",null),
-                new AlternativeDTO(null, "C", "path",false,"",null),
-                new AlternativeDTO(null, "D", "path",false,"",null),
-                new AlternativeDTO(null, "E", "path",false,"",null) ))
+                new AlternativeDTO(null, "A","desc", "path",true, "",null),
+                new AlternativeDTO(null, "B","desc", "path",false,"",null),
+                new AlternativeDTO(null, "C","desc", "path",false,"",null),
+                new AlternativeDTO(null, "D","desc", "path",false,"",null),
+                new AlternativeDTO(null, "E","desc", "path",false,"",null) ))
             .build());
 
             questionService.createQuestion(QuestionDTO.builder()
@@ -62,17 +62,18 @@ public class dataLoader implements ApplicationRunner {
             .numberLines(66)
             .educationLevel(QuestionEducationLevel.ENSINO_MÉDIO)
             .personId(11L)
-            .headerId(1L)
+            .header(HeaderDTO.builder().content("Content").imagePath("$path").build())
             .answerId(0L)
             .enable(true)
             .accessLevel(QuestionAccessLevel.PRIVATE)
+            .difficultyLevel(0)
             .tagIds(Set.of(1L))
             .alternatives(Set.of(
-                new AlternativeDTO(null, "A", "path",true, "",null),
-                new AlternativeDTO(null, "B", "path",false,"",null),
-                new AlternativeDTO(null, "C", "path",false,"",null),
-                new AlternativeDTO(null, "D", "path",false,"",null),
-                new AlternativeDTO(null, "E", "path",false,"",null) ))
+                new AlternativeDTO(null, "A","desc", "path",true, "",null),
+                new AlternativeDTO(null, "B","desc", "path",false,"",null),
+                new AlternativeDTO(null, "C","desc", "path",false,"",null),
+                new AlternativeDTO(null, "D","desc", "path",false,"",null),
+                new AlternativeDTO(null, "E","desc", "path",false,"",null) ))
             .build());
     }
 

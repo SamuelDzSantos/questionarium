@@ -16,6 +16,7 @@ import br.com.questionarium.question_service.dto.AnswerKeyDTO;
 import br.com.questionarium.question_service.dto.QuestionDTO;
 import br.com.questionarium.question_service.dto.QuestionMapper;
 import br.com.questionarium.question_service.model.Alternative;
+import br.com.questionarium.question_service.model.Header;
 import br.com.questionarium.question_service.model.Question;
 import br.com.questionarium.question_service.model.Tag;
 import br.com.questionarium.question_service.repository.AlternativeRepository;
@@ -41,6 +42,7 @@ public class QuestionService {
         this.questionMapper = questionMapper;
     }
 
+    @Transactional
     public QuestionDTO createQuestion(QuestionDTO questionDTO) {
 
         List<AlternativeDTO> correctAlternatives = questionDTO.getAlternatives().stream()
@@ -69,7 +71,7 @@ public class QuestionService {
             .orElseThrow(() -> new IllegalArgumentException("No correct alternative provided"));
     
         savedQuestion.setAnswerId(correctAlternative.getId());
-    
+        System.out.println(savedQuestion);
         savedQuestion = questionRepository.save(savedQuestion);
     
         return questionMapper.toDTO(savedQuestion);
@@ -111,7 +113,11 @@ public class QuestionService {
         question.setMultipleChoice(questionDTO.isMultipleChoice());
         question.setNumberLines(questionDTO.getNumberLines());
         question.setPersonId(questionDTO.getPersonId());
-        question.setHeaderId(questionDTO.getHeaderId());
+        question.setHeader(Header.builder()
+            .content(questionDTO.getHeader().getContent())
+            .imagePath(questionDTO.getHeader().getImagePath())
+            .build()
+        );
         question.setEnable(questionDTO.isEnable());
         question.setAccessLevel(questionDTO.getAccessLevel());
         question.setEducationLevel(questionDTO.getEducationLevel());
@@ -174,6 +180,18 @@ public class QuestionService {
                 return updatedQuestion;
             })
             .orElseThrow(() -> new RuntimeException("Question not found with ID " + id));
+    }
+
+    public List<QuestionDTO> getQuestionsByIds(List<Long> questions_ids){
+        List<QuestionDTO> questions = new ArrayList<>();
+        for (Long id : questions_ids ) {
+            Optional<QuestionDTO> dto = questionRepository.findById(id).map(questionMapper::toDTO);
+            if(dto.isPresent()){
+                questions.add(dto.get());
+            }
+        }
+        return questions;
+        
     }
 
 }
