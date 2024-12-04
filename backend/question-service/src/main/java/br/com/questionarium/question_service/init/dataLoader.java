@@ -43,37 +43,37 @@ public class dataLoader implements ApplicationRunner {
             .multipleChoice(true)
             .numberLines(15)
             .educationLevel(QuestionEducationLevel.ENSINO_FUNDAMENTAL)
-            .personId(99L)
-            .header(HeaderDTO.builder().content("Content").imagePath("$path").build())
+            .personId(0L)
+            .header(HeaderDTO.builder().content("Em uma floresta, animais convivem em harmonia, mantendo o equilíbrio do ecossistema. Porém, uma mudança inesperada ameaça esse equilíbrio. Qual solução poderia restaurar a harmonia, considerando os impactos na biodiversidade e na sustentabilidade?").imagePath("$path").build())
             .answerId(0L)
             .enable(true)
             .accessLevel(QuestionAccessLevel.PRIVATE)
             .tagIds(Set.of(1L))
             .alternatives(Set.of(
-                new AlternativeDTO(null, "A","desc", "path",true, "",null),
-                new AlternativeDTO(null, "B","desc", "path",false,"",null),
-                new AlternativeDTO(null, "C","desc", "path",false,"",null),
-                new AlternativeDTO(null, "D","desc", "path",false,"",null),
-                new AlternativeDTO(null, "E","desc", "path",false,"",null) ))
+                new AlternativeDTO(null, "A","A", "path",true, "a",null),
+                new AlternativeDTO(null, "B","B", "path",false,"b",null),
+                new AlternativeDTO(null, "C","C", "path",false,"c",null),
+                new AlternativeDTO(null, "D","D", "path",false,"d",null),
+                new AlternativeDTO(null, "E","E", "path",false,"e",null) ))
             .build());
 
             questionService.createQuestion(QuestionDTO.builder()
             .multipleChoice(true)
             .numberLines(66)
             .educationLevel(QuestionEducationLevel.ENSINO_MÉDIO)
-            .personId(11L)
-            .header(HeaderDTO.builder().content("Content").imagePath("$path").build())
+            .personId(0L)
+            .header(HeaderDTO.builder().content("Porém, uma mudança inesperada ameaça esse equilíbrio. Qual solução poderia restaurar a harmonia, considerando os impactos na biodiversidade e na sustentabilidade?").imagePath("$path").build())
             .answerId(0L)
             .enable(true)
             .accessLevel(QuestionAccessLevel.PRIVATE)
             .difficultyLevel(0)
             .tagIds(Set.of(1L))
             .alternatives(Set.of(
-                new AlternativeDTO(null, "A","desc", "path",true, "",null),
-                new AlternativeDTO(null, "B","desc", "path",false,"",null),
-                new AlternativeDTO(null, "C","desc", "path",false,"",null),
-                new AlternativeDTO(null, "D","desc", "path",false,"",null),
-                new AlternativeDTO(null, "E","desc", "path",false,"",null) ))
+                new AlternativeDTO(null, "A","A", "path",false, "ff",null),
+                new AlternativeDTO(null, "B","B", "path",false,"ff",null),
+                new AlternativeDTO(null, "C","C", "path",true,"ff",null),
+                new AlternativeDTO(null, "D","D", "path",false,"ff",null),
+                new AlternativeDTO(null, "E","E", "path",false,"ff",null) ))
             .build());
     }
 

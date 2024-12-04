@@ -13,13 +13,13 @@ import lombok.Data;
 @AllArgsConstructor
 public class QuestionDTO {
     private Long id;
-    private boolean multipleChoice;
+    private Boolean multipleChoice;
     private Integer numberLines;
     private Long personId;
     private HeaderDTO header;
     private Long answerId;
     private Integer difficultyLevel;
-    private boolean enable;
+    private Boolean enable;
     private QuestionEducationLevel educationLevel;
     private QuestionAccessLevel accessLevel;
 

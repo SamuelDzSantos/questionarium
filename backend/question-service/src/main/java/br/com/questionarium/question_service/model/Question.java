@@ -63,7 +63,7 @@ public class Question {
     private boolean enable;
 
     @Column(name = "difficulty_level",nullable = true)
-    private Integer difficutyLevel;
+    private Integer difficultyLevel;
 
     @Column(name = "access_type")
     @Enumerated(EnumType.ORDINAL)

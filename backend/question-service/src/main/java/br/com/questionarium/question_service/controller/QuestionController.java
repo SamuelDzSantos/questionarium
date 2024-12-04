@@ -5,7 +5,6 @@ import br.com.questionarium.question_service.dto.QuestionDTO;
 import br.com.questionarium.question_service.service.QuestionService;
 import br.com.questionarium.question_service.types.QuestionAccessLevel;
 import br.com.questionarium.question_service.types.QuestionEducationLevel;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +27,7 @@ public class QuestionController {
 
     @PostMapping
     public ResponseEntity<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
+        System.out.println(questionDTO);
         QuestionDTO createdQuestion = questionService.createQuestion(questionDTO);
         return new ResponseEntity<>(createdQuestion, HttpStatus.CREATED);
     }
@@ -97,7 +97,6 @@ public class QuestionController {
             @RequestParam(required = false) Set<Long> tagIds) {
 
         List<QuestionDTO> list = questionService.getFilteredQuestions(multipleChoice, personId, difficultyLevel, educationLevel, accessLevel, tagIds);
-
         if(list.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

@@ -49,6 +49,8 @@ public class QuestionService {
     @Transactional
     public QuestionDTO createQuestion(QuestionDTO questionDTO) {
 
+        System.out.println(questionDTO);
+
         List<AlternativeDTO> correctAlternatives = questionDTO.getAlternatives().stream()
         .filter(AlternativeDTO::getIsCorrect)
         .toList();
@@ -114,7 +116,7 @@ public class QuestionService {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Question not found with ID " + id));
     
-        question.setMultipleChoice(questionDTO.isMultipleChoice());
+        question.setMultipleChoice(questionDTO.getMultipleChoice());
         question.setNumberLines(questionDTO.getNumberLines());
         question.setPersonId(questionDTO.getPersonId());
         question.setHeader(Header.builder()
@@ -122,7 +124,7 @@ public class QuestionService {
             .imagePath(questionDTO.getHeader().getImagePath())
             .build()
         );
-        question.setEnable(questionDTO.isEnable());
+        question.setEnable(questionDTO.getEnable());
         question.setAccessLevel(questionDTO.getAccessLevel());
         question.setEducationLevel(questionDTO.getEducationLevel());
 
